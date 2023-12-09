@@ -16,7 +16,7 @@ function App() {
     {
       clearInterval(interval); // Cleanup interval on logout
     }
-  },[loginStatus])
+  },[loginStatus,interval])
 
   useEffect(()=>{
     const refreshAccessToken = ()=>{
@@ -30,9 +30,11 @@ function App() {
           refreshToken:refreshToken,
         })
         .then((response)=>{
-          console.log(response.data)
-          console.log(response.status)
-          if(response.status===403)
+          const {accessToken} = response.data;
+          localStorage.setItem('accessToken',accessToken);  // set the new access token again          
+        })
+        .catch((error)=>{
+          if(error.response.status===403)
           {
             setLoginStatus(false)
             localStorage.removeItem('accessToken');
@@ -47,7 +49,7 @@ function App() {
 
     }
 
-    const intervalId = setInterval(refreshAccessToken,  5000); // Refresh every 3 minutes
+    const intervalId = setInterval(refreshAccessToken, 3 * 60 * 1000); // Refresh every 3 minutes
 
     setIntervalId(intervalId) // saved for logout cleanup
 

@@ -43,6 +43,9 @@ button{
   width:100%;
   height:calc(100vh - 50px);
   background-color: rgb(56, 193, 147);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .logout{
@@ -55,4 +58,19 @@ button{
 
 .loginButton{
   margin-left:70px ;
+}
+
+.get{
+  margin-top: 10px;
+  width: 100px;
+  height: 40px;
+}
+
+.data{
+  margin-top: 10px;
+}
+
+li{
+  list-style-type:none;
+  font-size: 25px;
 }
