@@ -12,6 +12,9 @@ function Login({setCredentials,setLoginStatus}) {
         //set the state if both username and password is not null
         if(username && password)
         {
+             document.getElementById('username').value="";
+             document.getElementById('password').value="";
+             
             setCredentials({
                 username:username
             })
@@ -30,13 +33,16 @@ function Login({setCredentials,setLoginStatus}) {
   return (
     <div className="main-layout">
         <div>
-            <div>
-                <input type="text" id="username"/>
+            <div className="title">
+                <h1>JWT</h1>
             </div>
             <div>
-                <input type="text" id="password"/>
+                <input type="text" id="username" placeholder='username'/>
             </div>
             <div>
+                <input type="text" id="password" placeholder="password"/>
+            </div>
+            <div className='loginButton'>
                 <button onClick={onSubmit}>Login</button>
             </div>
         </div>

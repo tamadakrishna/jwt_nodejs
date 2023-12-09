@@ -1,8 +1,22 @@
 import React from 'react'
+import './App.css'
 
-function Student() {
+function Student({setLoginStatus}) {
   return (
-    <div>Student</div>
+    <div className='Student'>
+        <div className='banner'>
+            <div class="logout">
+                <button onClick={()=>{
+                    setLoginStatus(false);
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('refreshToken');
+                    }}>Logout</button>
+            </div>
+        </div>
+        <div className='Studentbody'>
+
+        </div>
+    </div>
   )
 }
 
