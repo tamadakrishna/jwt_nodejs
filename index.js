@@ -6,8 +6,10 @@ const app = express();
 
 app.use(express.json())
 
+//Middleware to parse JSON
 app.use(bodyParser.json())
 
+//students data is for the demo
 const students = [
     {
         roll_no: "100",
@@ -23,16 +25,42 @@ const students = [
     },
 ]
 
+// Generates Access Token for 3 minutes
 const generateAccessToken = (credentials)=>{
-    let accessToken = jwt.sign({ username : credentials.username }, process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '1m' });
+    let accessToken = jwt.sign({ username : credentials.username }, process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '3m' });
     return accessToken;
 }
 
+// Generates the Refresh Token for 30 minutes
 const generateRefreshToken = (credentials)=>{
-    let refreshToken = jwt.sign({ username : credentials.username }, process.env.ACCESS_TOKEN_SECRET,{ expiresIn: '1h' });
+    let refreshToken = jwt.sign({ username : credentials.username }, process.env.REFRESH_TOKEN_SECRET,{ expiresIn: '30m' });
     return refreshToken;
 }
 
+//Verifies the Refresh Token
+const verifyRefreshToken = (req,res,next)=>{
+
+    const {refreshToken} = req.body;
+
+    try {
+
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        next(); 
+
+      } catch(err) {
+        if(err?.message==="jwt expired")
+        {
+            res.sendStatus(403) //403 Forbidden
+        }
+        else if(err?.message=="jwt must be provided")
+        {
+            res.sendStatus(401)  //401 Unauthorized
+        }
+      }
+}
+
+//verifies the Access Token
 const verifyAccessToken = (req,res,next)=>{
     const token = req.headers['authorization'];
     try {
@@ -54,9 +82,18 @@ const verifyAccessToken = (req,res,next)=>{
 }
 
 
-app.post('/login',(req,res)=>{
+app.post('/refresh',verifyRefreshToken,(req,res)=>{
     const accessToken = generateAccessToken(req.body)
-    res.send({accessToken:accessToken})
+    res.send({accessToken:accessToken});
+})
+
+app.post('/login',(req,res)=>{
+    const accessToken  = generateAccessToken(req.body)
+    const refreshToken = generateRefreshToken(req.body)
+    res.send({
+    accessToken:accessToken,
+    refreshToken:refreshToken
+    })
 })
 
 
