@@ -3,8 +3,13 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const jwt = require('jsonwebtoken');
 const app = express();
+const cors = require('cors');
 
 app.use(express.json())
+
+app.use(cors({
+origin:'*'
+}))
 
 //Middleware to parse JSON
 app.use(bodyParser.json())
@@ -33,7 +38,7 @@ const generateAccessToken = (credentials)=>{
 
 // Generates the Refresh Token for 30 minutes
 const generateRefreshToken = (credentials)=>{
-    let refreshToken = jwt.sign({ username : credentials.username }, process.env.REFRESH_TOKEN_SECRET,{ expiresIn: '30m' });
+    let refreshToken = jwt.sign({ username : credentials.username }, process.env.REFRESH_TOKEN_SECRET,{ expiresIn: '15m' });
     return refreshToken;
 }
 
