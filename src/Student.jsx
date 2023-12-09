@@ -5,7 +5,7 @@ function Student({setLoginStatus}) {
   return (
     <div className='Student'>
         <div className='banner'>
-            <div class="logout">
+            <div className="logout">
                 <button onClick={()=>{
                     setLoginStatus(false);
                     localStorage.removeItem('accessToken');
